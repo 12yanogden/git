@@ -3,7 +3,7 @@ module github.com/12yanogden/git
 go 1.21.5
 
 require (
-	github.com/12yanogden/shell v0.0.0-20240109123043-14a3a1d89add
+	github.com/12yanogden/shell v0.0.0-20240109125239-06b52fd26e19
 	github.com/12yanogden/slices v0.0.0-20240106062510-2153937e8a4a
 	github.com/12yanogden/str v0.0.0-20240107171210-9eee80c43f5a
 	github.com/12yanogden/tables v0.0.0-20231229161547-629ada5ab76d

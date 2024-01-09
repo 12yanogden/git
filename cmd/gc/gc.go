@@ -47,8 +47,8 @@ func main() {
 	multi := pterm.DefaultMultiPrinter
 
 	addSpinner, _ := pterm.DefaultSpinner.WithWriter(multi.NewWriter()).Start("Add changes")
-	commitSpinner, _ := pterm.DefaultSpinner.WithWriter(multi.NewWriter()).Start("Add changes")
-	pushSpinner, _ := pterm.DefaultSpinner.WithWriter(multi.NewWriter()).Start("Add changes")
+	commitSpinner, _ := pterm.DefaultSpinner.WithWriter(multi.NewWriter()).Start("Commit changes")
+	pushSpinner, _ := pterm.DefaultSpinner.WithWriter(multi.NewWriter()).Start("Push changes")
 
 	multi.Start()
 

@@ -13,7 +13,7 @@ import (
 func main() {
 	args := os.Args[1:]
 	branch := git.CurrentBranch()
-	ticket := ticket.BranchToTicket(branch)
+	ticket := ticket.BranchToTicket(&branch)
 
 	if len(args) == 0 {
 		pterm.Error.Println("gc: commit message required")
@@ -21,6 +21,10 @@ func main() {
 	} else if len(args) > 1 {
 		pterm.Error.Printf("gc: expected 1 argument. %d arguments given", len(args))
 		os.Exit(1)
+	}
+
+	if len(ticket) > 0 {
+		ticket += ": "
 	}
 
 	if strings.Contains(branch, "master") ||
@@ -44,23 +48,30 @@ func main() {
 		}
 	}
 
+	addMsg := "Add changes"
+	commitMsg := "Commit changes"
+	pushMsg := "Push changes"
+
 	multi := pterm.DefaultMultiPrinter
 
-	addSpinner, _ := pterm.DefaultSpinner.WithWriter(multi.NewWriter()).Start("Add changes")
-	commitSpinner, _ := pterm.DefaultSpinner.WithWriter(multi.NewWriter()).Start("Commit changes")
-	pushSpinner, _ := pterm.DefaultSpinner.WithWriter(multi.NewWriter()).Start("Push changes")
+	addSpinner, _ := pterm.DefaultSpinner.WithWriter(multi.NewWriter()).Start(addMsg)
+	commitSpinner, _ := pterm.DefaultSpinner.WithWriter(multi.NewWriter()).Start(commitMsg)
+	pushSpinner, _ := pterm.DefaultSpinner.WithWriter(multi.NewWriter()).Start(pushMsg)
 
 	multi.Start()
 
 	shell.Run("git", []string{"add", "."})
 
-	addSpinner.Success()
+	addSpinner.Stop()
+	pterm.Println("[" + pterm.Green("✓") + "] " + addMsg)
 
 	shell.Run("git", []string{"commit", "-m", ticket + args[0]})
 
-	commitSpinner.Success()
+	commitSpinner.Stop()
+	pterm.Println("[" + pterm.Green("✓") + "] " + commitMsg)
 
 	shell.Run("git", []string{"push"})
+	pterm.Println("[" + pterm.Green("✓") + "] " + pushMsg)
 
-	pushSpinner.Success()
+	pushSpinner.Stop()
 }

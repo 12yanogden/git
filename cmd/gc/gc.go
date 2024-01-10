@@ -52,26 +52,32 @@ func main() {
 	commitMsg := "Commit changes"
 	pushMsg := "Push changes"
 
-	multi := pterm.DefaultMultiPrinter
+	addPrinter := pterm.DefaultMultiPrinter
+	commitPrinter := pterm.DefaultMultiPrinter
+	pushPrinter := pterm.DefaultMultiPrinter
 
-	addSpinner, _ := pterm.DefaultSpinner.WithWriter(multi.NewWriter()).Start(addMsg)
-	commitSpinner, _ := pterm.DefaultSpinner.WithWriter(multi.NewWriter()).Start(commitMsg)
-	pushSpinner, _ := pterm.DefaultSpinner.WithWriter(multi.NewWriter()).Start(pushMsg)
+	addSpinner, _ := pterm.DefaultSpinner.WithWriter(addPrinter.NewWriter()).Start(addMsg)
+	commitSpinner, _ := pterm.DefaultSpinner.WithWriter(commitPrinter.NewWriter()).Start(commitMsg)
+	pushSpinner, _ := pterm.DefaultSpinner.WithWriter(pushPrinter.NewWriter()).Start(pushMsg)
 
-	multi.Start()
+	addPrinter.Start()
 
 	shell.Run("git", []string{"add", "."})
 
-	addSpinner.Stop()
-	pterm.Println("[" + pterm.Green("✓") + "] " + addMsg)
+	addSpinner.Success()
+	// pterm.Println("[" + pterm.Green("✓") + "] " + addMsg)
+
+	commitPrinter.Start()
 
 	shell.Run("git", []string{"commit", "-m", ticket + args[0]})
 
-	commitSpinner.Stop()
-	pterm.Println("[" + pterm.Green("✓") + "] " + commitMsg)
+	commitSpinner.Success()
+	// pterm.Println("[" + pterm.Green("✓") + "] " + commitMsg)
+
+	pushPrinter.Start()
 
 	shell.Run("git", []string{"push"})
-	pterm.Println("[" + pterm.Green("✓") + "] " + pushMsg)
+	// pterm.Println("[" + pterm.Green("✓") + "] " + pushMsg)
 
-	pushSpinner.Stop()
+	pushSpinner.Success()
 }
